@@ -1,0 +1,52 @@
+group 'com.zoom'
+version '1.0-SNAPSHOT'
+description  'A project to automate plugin signing,packaging and installation into Adobe Extension Manager.'
+
+apply from : "property_reader_writer.gradle"
+
+
+
+
+
+
+//Pre-requisite : Must have Extension Manager  added in environment PATH.
+//Pre-condition : A ZXP must be there at zxp defined above.
+//Installs Signed and Packaged ZXP produced in previous step into Extension Manager
+
+
+task zxpInstallCC2014(type:Exec,dependsOn: createPropertiesFileCC2014){
+
+    description ' Installs,Signed and Packaged CC 2014 ZXP, in Extension Manager.'
+    commandLine "ExManCmd"
+    args '/install',createdZxpCC2014 //createdZxp is defined in sign_package_install.gradle
+
+    //informative messages
+    doFirst{
+        println("Installing CC 2014 ZXP...")
+    }
+    doLast{
+        println("Installing CC 2014 ZXP...DONE.")
+    }
+}
+
+task zxpInstallCC(type:Exec,dependsOn: createPropertiesFileCC){
+
+    description 'To Install,Signed and Packaged CC ZXP, in Extension Manager.'
+    commandLine "ExManCmd"
+    args '/install',createdZxpCC //createdZxp is defined in sign_package_install.gradle
+
+    //informative messages
+    doFirst{
+        println("Installing CC ZXP...")
+    }
+    doLast{
+        println("Installing CC ZXP...DONE.")
+    }
+}
+
+
+
+
+
+
+

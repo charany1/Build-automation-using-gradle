@@ -1,0 +1,22 @@
+//defaultTasks 'clean'
+
+
+
+ext{
+    buildDir = 'build'
+}
+
+
+task clean(type:Delete){
+
+    description  'Deletes build directory, if any exists.'
+    delete  buildDir
+    //informative messages
+    doFirst{
+        println("Cleaning earlier build,if any exists...")
+    }
+    doLast{
+        println("Cleaning...DONE.")
+    }
+}
+

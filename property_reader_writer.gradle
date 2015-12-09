@@ -1,0 +1,255 @@
+apply from : 'generate_checksum.gradle'
+
+//Class to handle reading and writing of properties files.
+class PropertyReaderWriter {
+
+    String filePath
+
+    PropertyReaderWriter(String filePath) {
+        this.filePath = filePath
+    }
+
+    def getProperty(String name) {
+        Properties props = new Properties()
+        File propsFile = new File(filePath)
+        propsFile.withInputStream {
+            props.load it
+        }
+        props."$name"
+    }
+
+    def addProperty(String name, args) {
+        Properties props = new Properties()
+        File propsFile = new File(filePath)
+        props.load propsFile.newDataInputStream()
+        props.setProperty name, args.toString() - '[' - ']'
+        props.store propsFile.newWriter(), null
+    }
+
+}
+
+ext {
+//File names for properties files
+     ZmAdobeExtensionCCProperties = 'ZmAdobeExtensionCC.properties'
+     ZmAdobeExtensionCC2014Properties = 'ZmAdobeExtensionCC2014.properties'
+     fileCCProperties = zxpCC + ZmAdobeExtensionCCProperties
+     fileCC2014Properties = zxpCC2014 + ZmAdobeExtensionCC2014Properties
+
+//Checksum files
+    fileCC2014Checksum = zxpCC2014 + ZmAdobeExtensionCC2014 + ".MD5"
+    fileCCChecksum = zxpCC + ZmAdobeExtensionCC + ".MD5"
+
+}
+//Property reader writer objects
+def propertyReaderWriterCC2014 = new PropertyReaderWriter(fileCC2014Properties)
+def propertyReaderWriterCC = new PropertyReaderWriter(fileCCProperties)
+
+
+
+
+// Tasks to read checksum from checksum files.
+def md5ChecksumCC2014;
+task getChecksumCC2014(dependsOn: generateChecksumCC2014){
+
+    description "Reads checksum from fileCC2014Checksum checksum file."
+
+    doFirst {
+        md5ChecksumCC2014 = file(fileCC2014Checksum).text;
+    }
+    //informative messages
+    doFirst{
+        println("Reading Checksum for CC 2014...")
+    }
+    doLast{
+        println("Reading Checksum CC 2014...DONE.")
+    }
+
+}
+
+
+def md5ChecksumCC;
+task getChecksumCC(dependsOn: generateChecksumCC){
+
+    description "Reads checksum from fileCCChecksum checksum file."
+    doFirst {
+        md5ChecksumCC = file(fileCCChecksum).text;
+    }
+    //informative messages
+    doFirst{
+        println("Reading Checksum CC...")
+    }
+    doLast{
+        println("Reading Checksum CC...DONE.")
+    }
+
+}
+
+
+//tasks to delete checksum files once checksum has been read.
+task deleteTemporaryChecksumFileCC2014(type:Delete,dependsOn: getChecksumCC2014){
+
+    description "Deletes checksum file fileCC2014Checksum once its content has been read."
+
+    delete(fileCC2014Checksum);
+
+    //informative messages
+    doFirst{
+        println("Deleting temporarty checksum file fileCC2014Checksum...")
+    }
+    doLast{
+        println("Deleting temporarty checksum file fileCC2014Checksum...DONE.")
+    }
+}
+
+
+task deleteTemporaryChecksumFileCC(type:Delete,dependsOn: getChecksumCC){
+
+    description "Deletes checksum file fileCCChecksum once its content has been read."
+
+    delete(fileCCChecksum);
+
+    //informative messages
+    doFirst{
+        println("Deleting temporarty checksum file fileCCChecksum...")
+    }
+    doLast{
+        println("Deleting temporarty checksum file fileCCChecksum...DONE.")
+    }
+}
+
+
+
+
+
+//createEmptyPropertiesFile tasks create empty properties files in respective zxp directories to avoid Error:[File not found].
+//task to make ZmAdobeExtensionCC2014.properties file so that File not found error is not generated when it used for first time.
+
+/*
+
+It seems that this Task is not required since it is essentially same as makeZxpDirs in sign_package_install.gradle. See if you can work without it.
+Delete these if you can.
+task makeDirectoryStructureCC2014(type : Exec){
+
+    description "Maked directory structure for storing final zxp and properties files."
+
+    commandLine 'mkdir'
+    args '-p', zxpCC2014
+
+    //informative messages
+    doFirst{
+        println("Making directory structure 'build/adobe/zxp/adobe-cc2014' ...")
+    }
+    doLast{
+        println("Making directory structure 'build/adobe/zxp/adobe-cc2014'...DONE.")
+    }
+}
+
+task makeDirectoryStructureCC(type : Exec){
+
+    description "Maked directory structure for storing final zxp and properties files."
+
+    commandLine 'mkdir'
+    args '-p', 'build/adobe/zxp/adobe-cc2014'
+
+    //informative messages
+    doFirst{
+        println("Making directory structure 'build/adobe/zxp/adobe-cc2014' ...")
+    }
+    doLast{
+        println("Making directory structure 'build/adobe/zxp/adobe-cc2014'...DONE.")
+    }
+}
+
+*/
+
+
+
+task createEmptyPropertiesFileCC2014(type : Exec,dependsOn: getChecksumCC2014){
+
+    description "Create empty fileCC2014Properties files in configuration phase to avoid  'Error: [file not found]' ."
+    doFirst {
+        commandLine 'touch.exe'
+        args fileCC2014Properties
+    }
+    //informative messages
+    doFirst{
+        println("Creating empty fileCC2014Properties properties file...")
+    }
+    doLast{
+        println("Creating empty fileCC2014Properties properties file...DONE.")
+    }
+
+}
+
+
+task createEmptyPropertiesFileCC(type : Exec,dependsOn: getChecksumCC){
+
+    description "Create empty file fileCCProperties in configuration phase to avoid  'Error: [file not found]' ."
+    doFirst {
+        commandLine 'touch.exe'
+        args fileCCProperties
+    }
+    //informative messages
+    doFirst{
+        println("Creating empty fileCCProperties properties file...")
+    }
+    doLast{
+        println("Creating empty fileCCProperties properties file...DONE.")
+    }
+
+}
+
+
+
+
+
+
+//Task to create properties file having version and checksum.
+//Order in which tasks are executed :
+task createPropertiesFileCC2014(dependsOn : ["deleteTemporaryChecksumFileCC2014","createEmptyPropertiesFileCC2014"]){
+
+    description "Creates fileCC2014Properties file containing version and checksum."
+    doFirst{
+    println("Creating fileCC2014Properties file...")
+
+    propertyReaderWriterCC2014.addProperty('version',version);
+    propertyReaderWriterCC2014.addProperty('md5',md5ChecksumCC2014);
+
+    println("Creating fileCC2014Properties file...DONE.")
+    }
+
+    /*
+    //informative messages
+    doFirst{
+        println("Creating ZmAdobeExtensionCC2014.properties file...")
+    }
+    doLast{
+        println("Creating ZmAdobeExtensionCC2014.properties file...DONE.")
+    }
+    */
+
+}
+
+
+task createPropertiesFileCC(dependsOn : ["deleteTemporaryChecksumFileCC","createEmptyPropertiesFileCC"]){
+
+    description "Creates fileCCProperties file containing version and checksum."
+    doFirst{
+    println("Creating fileCCProperties file...")
+
+    propertyReaderWriterCC.addProperty('version',version);
+    propertyReaderWriterCC.addProperty('md5',md5ChecksumCC);
+
+    println("Creating fileCCProperties file...DONE.")
+    }
+
+    /*
+    //informative messages
+    doFirst{
+        println("Creating ZmAdobeExtensionCC2014.properties file...")
+    }
+    doLast{
+        println("Creating ZmAdobeExtensionCC2014.properties file...DONE.")
+    }*/
+
+}

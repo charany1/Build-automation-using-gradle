@@ -1,0 +1,37 @@
+//Handles only CC 2014 , add functionality for CC version.
+
+apply from : 'sign_package_install.gradle'
+
+task generateChecksumCC2014(dependsOn : zxpSignAndPackageCC2014) {
+
+    description "Generates checksum for CC 2014 ZXP after source has been signed and packaged into zxp."
+
+    doLast {
+        ant.checksum file: createdZxpCC2014 //defined in sign_package_install.gradle
+    }
+    //informative messages
+    doFirst{
+        println("Generating checksum for CC 2014 ZXP...")
+    }
+    doLast{
+        println("Generating checksum for CC 2014 ZXP...DONE.")
+    }
+
+}
+
+task generateChecksumCC(dependsOn : zxpSignAndPackageCC) {
+
+    description "Generates checksum for CC  ZXP after source has been signed and packaged into zxp."
+
+    doLast {
+        ant.checksum file: createdZxpCC //defined in sign_package_install.gradle
+    }
+    //informative messages
+    doFirst{
+        println("Generating checksum for CC  ZXP...")
+    }
+    doLast{
+        println("Generating checksum for CC  ZXP...DONE.")
+    }
+
+}

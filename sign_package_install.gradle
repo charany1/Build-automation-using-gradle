@@ -1,0 +1,116 @@
+
+
+
+//importing tasks from other files
+apply from : 'manifest_version_updater.gradle'
+
+
+
+ext {
+    //File names for output ZXP's
+    ZmAdobeExtensionCC = 'ZmAdobeExtensionCC.zxp'
+    ZmAdobeExtensionCC2014 = 'ZmAdobeExtensionCC2014.zxp'
+
+    //parameters for ZxpSignCmd
+    //sourceDirCC, sourceDirCC2014 = 'build/adobe/src/adobe-cc2014'//to be deleted
+    zxpCC2014 = 'build/adobe/zxp/adobe-cc2014/'
+    zxpCC = 'build/adobe/zxp/adobe-cc/'
+    createdZxpCC2014 = zxpCC2014+ZmAdobeExtensionCC2014
+    createdZxpCC = zxpCC+ZmAdobeExtensionCC
+    certificate = 'YOG_CERTIFICATE.p12 '
+    password = '1234'
+
+
+
+}
+
+
+//ZxpSignCmd doesn't makes a directory automatically if it  is not there, so below tasks do so.
+task makeZxpDirCC2014(type:Exec,dependsOn: updateVersionInManifestCC2014) {
+
+    description 'Makes build/adobe/zxp/adobe-cc2014 directory for storing ZXPs. '
+
+
+
+    commandLine "mkdir"
+    args '-p', zxpCC2014
+
+    //informative messages
+    doFirst{
+        println("Making build/adobe/zxp/adobe-cc2014 directory for storing ZXPs ...")
+    }
+    doLast{
+        println("Making build/adobe/zxp/adobe-cc2014 directory for storing ZXPs...DONE.")
+    }
+
+}
+
+
+task makeZxpDirCC(type:Exec,dependsOn: updateVersionInManifestCC) {
+
+    description 'Makes build/adobe/zxp/adobe-cc directory for storing ZXPs. '
+
+
+
+    commandLine "mkdir"
+    args '-p', zxpCC
+
+
+
+    //informative messages
+    doFirst{
+        println("Making build/adobe/zxp/adobe-cc directory for storing ZXPs ...")
+    }
+    doLast{
+        println("Making build/adobe/zxp/adobe-cc directory for storing ZXPs...DONE.")
+    }
+
+
+}
+
+
+//Pre-requisite : Must have Packaging and Signing toolkit  added in environment PATH.
+// Signs and Package ZXP from source.
+task zxpSignAndPackageCC2014(type:Exec,dependsOn: makeZxpDirCC2014){
+
+    description 'To Sign and Package ZXP - CC 2014  from source.'
+
+
+    commandLine "ZxpSignCmd"
+    args '-sign', sourceDirCC2014, createdZxpCC2014, certificate, password
+
+
+    //informative messages
+    doFirst{
+        println("Signing and Packaging ZXP - CC 2014...")
+    }
+    doLast{
+        println("Signing and Packaging ZXP - CC 2014...DONE.")
+    }
+
+}
+
+task zxpSignAndPackageCC(type:Exec,dependsOn: makeZxpDirCC){
+
+    description 'To Sign and Package ZXP - CC   from source.'
+
+
+        commandLine "ZxpSignCmd"
+        args '-sign', sourceDirCC, createdZxpCC, certificate, password
+
+
+    //informative messages
+    doFirst{
+        println("Signing and Packaging ZXP - CC ...")
+    }
+    doLast{
+        println("Signing and Packaging ZXP - CC ...DONE.")
+    }
+
+}
+
+
+
+
+
+

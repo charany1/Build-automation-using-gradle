@@ -1,0 +1,177 @@
+
+apply from : 'copy_source.gradle'
+
+//Class to handle reading and writing of properties files.
+class PropertyReaderWriter {
+
+    String filePath
+
+    PropertyReaderWriter(String filePath) {
+        this.filePath = filePath
+    }
+
+    def getProperty(String name) {
+        Properties props = new Properties()
+        File propsFile = new File(filePath)
+        propsFile.withInputStream {
+            props.load it
+        }
+        props."$name"
+    }
+
+    def addProperty(String name, args) {
+        Properties props = new Properties()
+        File propsFile = new File(filePath)
+        props.load propsFile.newDataInputStream()
+        props.setProperty name, args.toString() - '[' - ']'
+        props.store propsFile.newWriter(), null
+    }
+
+}
+
+
+//variables for reading from version.properties.txt and zoom.build.num
+// File paths set as project extension
+ext {
+     versionPropertiesTxt = "../version.properties.txt";
+     zoomBuildNum = "../zoom.build.num";
+}
+//Property reader writer objects
+def propertyReaderWriterVPT = new PropertyReaderWriter(versionPropertiesTxt);
+def propertyReaderWriterZBN = new PropertyReaderWriter(zoomBuildNum);
+
+
+
+
+
+//Executes dbview to generate zoom.build.num in parent directory of this project.
+/*
+task dbview(type:Exec){
+    description 'Executes dbview to generate zoom.build.num in parent directory of this project.'
+    commandLine "dbview"
+    args '--ant', '-c', '-maxrrn'
+
+    //informative messages
+    doFirst{
+        println("Executing dbview...")
+    }
+    doLast{
+        println("Executing dbview...DONE.")
+    }
+}
+*/
+
+/*
+
+Well , we can create task dynamically by passing argument for CC and CC 2014 version but following issues are there:
+1.If we create tasks during configuration phase then , arguments like version will be null because it is evaluated in execution phase. So a big NO NO.
+2.If we create tasks during execution phase then , specifying dependency of other tasks on these tasks would be pretty tedious. So again a big NO NO.
+
+So, I'm gonna resort to copy paste because Zen of Python : "EXPLICIT IS BETTER THAN IMPLICIT".
+//classifier =[CC/CC2014]
+def createVersionUpdaters(fileName,token,value,classifier){
+    return task ("updateVersionInManifest${classifier}",dependsOn : getUpdatedVersion)<<{
+        ant.replace(
+                file: fileName,
+                token: token,
+                value: value
+
+        )
+
+    }
+
+}
+*/
+
+ext{
+    //numbers to be read from zoom.build.num and version.properties.txt
+    versionNumber = "" ;
+    buildNumber = "";
+    version = "";
+}
+
+task getUpdatedVersion{
+
+    description "Reads updated version from version.properties.txt and zoom.build.num ."
+
+
+
+    doLast {
+        versionNumber = propertyReaderWriterVPT.getProperty('version.number');
+        buildNumber = propertyReaderWriterZBN.getProperty('build.number');
+        version = versionNumber + '.' + buildNumber;
+
+    }
+
+    //informative messages
+    doFirst{
+        println("Reading updated version...")
+    }
+    doLast{
+        println("Reading updated version...DONE.")
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+task updateVersionInManifestCC(dependsOn : ['getUpdatedVersion','copyFilesCC']) {
+
+    description "Updates version in manifest.xml for CC."
+
+    doLast {
+        ant.replace(
+                file: sourceDirCC + "\\CSXS\\manifest.xml",
+                token: '@version@',
+                value: version
+
+        )
+    }
+
+    //informative messages
+    doFirst {
+        println("Updating version in manifest.xml for CC...")
+    }
+    doLast {
+        println("Updating version in manifest.xml for CC...DONE.")
+
+    }
+
+
+}
+
+
+
+
+task updateVersionInManifestCC2014(dependsOn : ['getUpdatedVersion','copyFilesCC2014']) {
+
+    description "Updates version in manifest.xml for CC 2014."
+
+    doLast {
+        ant.replace(
+                file: sourceDirCC2014 + "\\CSXS\\manifest.xml",
+                token: '@version@',
+                value: version
+
+        )
+    }
+
+    //informative messages
+    doFirst {
+        println("Updating version in manifest.xml for CC 2014...")
+    }
+    doLast {
+        println("Updating version in manifest.xml for CC 2014...DONE.")
+
+    }
+
+
+}

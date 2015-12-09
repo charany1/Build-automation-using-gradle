@@ -1,0 +1,172 @@
+<!doctype html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link id="ppstyle" rel="stylesheet" type="text/css" href="./style.css">
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
+<title>Prototype</title>
+<script src="./ext.js"></script>
+<script src="./lib/CSInterface.js"></script>
+<!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script> -->
+<script src="./js/launcher.js"></script>
+<script src="./js/StatusHelper.js"></script>
+<script src="./js/ZmPlugin.js"></script>
+<script src="./js/UIHelper.js"></script>
+<script src="./js/PropertyUtil.js"></script>
+<script src="./lib/jquery-1.9.1.js"></script>
+<script src="http://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+<script>
+jQuery(document).ready (function(){
+	loadUI();
+});
+</script>
+</head>
+
+<body onLoad="onLoaded()">
+	<div>
+		<img id="imod" alt="" src="./assets/orange.png"/>
+		<img id="ilock" alt="" src="./assets/orange.png"/> 
+		<img id="iver" alt="" src="./assets/orange.png"/>
+		<button id="refreshBtn">
+			<img id="refreshImg" alt="refresh" src="./assets/refresh_status.png"/>
+		</button>
+		<button id="settingsBtn">
+			<img id="settingsImg" alt="Settings" src="./assets/settings.png"/>
+		</button>
+	</div>
+	<hr width="100%" class="default" size=".5px">
+	
+	<div id="content" class="default">
+		<input id="searchInput" type="text" class="default" style="background-color:#FEFEFE;">
+		<table border="0" width="100%" style="text-align: center;">
+			<tr>
+				<td id="chkinTd">
+					<div class="divBtn" data-command="checkIn"><img alt="Check In" src="./assets/checkin.png" class="actionBtnImg" valign="middle" hspace="3px" Style="float:left;" /><font class="default" style="background-color: transparent; float:left; line-height: 2em; vertical-align: bottom;" id="chkIntxt"></font></div>
+				</td>
+				<td id="quickChkinTd">
+					<div class="divBtn" data-command="quickChkIn"><img alt="Quick Check-In" src="./assets/Quick-Checkin.png" class="actionBtnImg" valign="middle" hspace="3px" Style="float:left;"><font class="default wrap"  style="background-color: transparent; float:left; text-align: left;" id="quickChkInTxt"></font></div>
+				</td>
+			</tr>
+			<tr>
+				<td id="lockUnlockTd">
+					<div id="lockDiv" class="divBtn" ><img alt="Lock/Unlock " src="./assets/lock.png" class="actionBtnImg" valign="middle" hspace="3px" Style="float:left;"/><font class="default wrap" style="background-color: transparent;float:left;text-align: left;" id="lockUnlockTxt"></font></div>
+				</td>				
+				<td id="smartCopyTd">
+					<div class="divBtn" data-command="smartCopy"><img alt="Smart Copy" src="./assets/smart_copy.png" class="actionBtnImg" valign="middle" hspace="3px" Style="float:left;"/><font class="default wrap" style="background-color: transparent; float:left;text-align: left; " id="smartCpyTxt"></font></div>
+				</td>
+			</tr>
+			<tr>
+				<td id="revertTd">
+					<div id="revertDiv" class="divBtn"><img alt="Revert" src="./assets/revert.png" class="actionBtnImg" valign="middle" hspace="3px" Style="float:left;"/><font class="default" style="background-color: transparent; float:left;line-height: 2em; vertical-align: bottom;" id="revertTxt"></font></div>
+				</td>
+				<td id="updateTd">
+					<div class="divBtn" data-command="update"><img alt="Update" src="./assets/update.png" class="actionBtnImg" valign="middle" hspace="3px" Style="float:left;"/><font class="default" style="background-color: transparent;float:left;line-height: 2em; vertical-align: bottom;" id="updateTxt"></font></div>
+				</td>
+			</tr>
+			<tr>
+				<td id="browseTd">
+					<div id="browseDiv" class="divBtn" data-command="asset_browser"><img alt="Asset Browser" src="./assets/show_in_vab.png" class="actionBtnImg" valign="middle" hspace="3px" Style="float:left;"/><font class="default wrap" style="background-color: transparent;float:left;width: 80px;text-align: left;" id="browserTxt"></font></div>
+				</td>
+				<td id="wfTd">
+					<div id="wfDiv" class="divBtn" data-command="workflow"><img alt="Workflow" src="./assets/task_manager.png" class="actionBtnImg" valign="middle" hspace="3px" Style="float:left;"/><font class="default wrap" style="background-color: transparent;float:left;text-align: left;" id="taskManagerTxt"></font></div>
+				</td>
+			</tr>
+			<tr>
+				<td id="rvlTd">
+					<div id="rvlDiv" class="divBtn" data-command="reveal"><img alt="Reveal in Explorer" src="./assets/open_folder.png" class="actionBtnImg" valign="middle" hspace="3px" Style="float:left;"/><font class="default wrap" style="background-color: transparent; float:left;text-align:left; width: 70px;" id="revealTxt"></font></div>
+				</td>
+				<td id="statTd">
+					<div id="statDiv" class="divBtn" data-command="status"><img alt="Status" src="./assets/status.png" class="actionBtnImg" valign="middle" hspace="3px" Style="float:left;"/><font class="default" style="background-color: transparent;float:left;line-height: 2em; vertical-align: bottom;" id="statTxt"></font></div>
+				</td>
+			</tr>
+			<tr>
+				<td id="resolveLinks">
+					<div class="divBtn" data-command="resolve-links"><img alt="Status" src="./assets/relink-icon.png" class="actionBtnImg" valign="middle" hspace="3px" Style="float:left;"/><font class="default wrap" style="background-color: transparent;float:left;text-align:left;" id="resolveLinkTxt"></font></div>
+				</td>
+			</tr>
+		</table>
+		<!-- <button id="progressBtn" onclick="showProgress()">Show</button> -->
+	</div>
+	<!-- <hr width="100%" class="default" size=".5px">
+	<div>
+		<font class="default" id="userDtls"></font>
+		<button id="settingsBtn" title="abc">
+			<img id="settingsImg" alt="Settings" src="./assets/settings.png"/>
+		</button> -->
+		<!-- <table border="0" width="100%" style="text-align: left;">
+			<tr>
+				<td>
+					
+					<input type="checkbox" id="layerChk" class="default" style="vertical-align: middle; text-align: left;" checked><font class="default" style="background-color: transparent;text-align:left; vertical-align: middle;">Extract Layers</font><br>
+				</td>
+				<td>
+					
+					<input type="checkbox" id="getThumb" class="default" style="vertical-align: middle; text-align: left;" checked><font class="default" style="background-color: transparent;text-align:left; vertical-align: middle;">Generate thumbnail</font><br>
+				</td>
+			</tr>
+		</table> -->
+	<!-- </div> -->
+	<!-- <font class="default" style="background-color: transparent;text-align:left; float:left; vertical-align: middle; width: 100%;">Logged in : sa@Local-Server</font><br> -->
+	<div id="lockMenu" class="hiddenMenu" style="width: 120px;">
+		<table id="lockTbl">
+			<tr id="lock">
+				<td><font class="default" style="background-color: transparent; color: #000;" id="getLockTxt"></font></td>
+			</tr>
+			<tr id="unlock">
+				<td><font class="default" style="background-color: transparent; color: #000;" id="releaseLockTxt"></font></td>
+			</tr>
+		</table>
+	</div>
+	<div id="revertMenu" class="hiddenMenu">
+		<table id="revertTbl">
+			<tr id="revertdata">
+				<td><font class="default" style="background-color: transparent; color: #000;" id="revChangeTxt"></font></td>
+			</tr>
+			<tr id="revertrenamed">
+				<td><font class="default" style="background-color: transparent; color: #000;" id="revRenamedTxt"></font></td>
+			</tr>
+			<tr id="revertmove">
+				<td><font class="default" style="background-color: transparent; color: #000;" id="revMovedTxt"></font></td>
+			</tr>
+			<tr id="revertadd">
+				<td><font class="default" style="background-color: transparent; color: #000;" id="revAddedTxt"></font></td>
+			</tr>
+			<tr id="revertall">
+				<td><font class="default" style="background-color: transparent; color: #000;" id="revAllTxt"></font></td>
+			</tr>
+		</table>
+	</div>
+	<div id="overlay" class="overlayCls">
+		<h1 class="default" id="settingsHdr"></h1>
+		<table border="0" style="text-align: left;">
+			<tr>
+				<td>
+					<input type="checkbox" id="layerChk" class="default" style="vertical-align: middle; text-align: left;" checked><font id="extractLyrTxt" class="default" style="background-color: transparent;text-align:left; vertical-align: middle; color: white;"></font><br>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="checkbox" id="getThumb" class="default" style="vertical-align: middle; text-align: left;" checked><font id="thumbTxt" class="default" style="background-color: transparent;text-align:left; vertical-align: middle; color: white;"></font><br>
+				</td>
+			</tr>
+		</table>
+		<button class="default" id="saveBtn"></button>
+		<button id="cancelBtn" class="default"></button>
+		<div style="bottom: 15px; position: absolute; width: 95%; text-align: center;" align="center">
+			<hr width="100%" class="default" size=".5px" align="center" style="bottom: 15px; position: absolute; text-align: center; left: 2.5%;">
+			<font class="default" id="userDtls"></font>
+		</div>
+	</div>
+	<div id="progressOverlay" class="overlayCls">
+		<font id="progressTxt" class="default" style="background-color: transparent; float:left; vertical-align: middle; margin-left: 10%; margin-top: 45%; margin-bottom: 10px; color: white;"></font>
+		<div id="continuousprogress" style="height: 10px; width: 90%; margin-left: 5%; vertical-align: middle;"></div>
+		<!-- <div id="progressbar"> -->
+			<!-- <img id="progImg" src="./assets/progress_bar.gif" width="90%"/> -->
+			<!-- <button id="cancelBtn">
+				<img id="cancelImg" alt="Cancel" src="./assets/Cancel.png"/>
+			</button> -->
+		<!-- </div> -->
+	</div>
+</body>
+</html>

@@ -1,0 +1,168 @@
+body {
+text-align:center;
+}
+
+/* button, select, input
+{
+border:1px solid;
+height:19px;
+}
+ */
+ 
+select, input
+{
+border:1px solid;
+height:19px;	
+}
+
+button{
+/*border:1px solid;*/
+border:0px;
+height:20px;
+border-style:none;
+cursor:pointer;
+}
+
+input[type=text]
+{
+height:16px;
+}
+
+font{
+	font-family: Verdana;
+	font-size: 1em;
+}
+
+td{
+	padding-bottom: 5px;
+}
+
+.actionBtnImg
+{
+	.default;
+	margin-bottom: 5px;
+}
+
+#content {
+margin-right:auto;
+margin-left:auto;
+vertical-align:middle;
+width:100%;
+}
+
+#content ul {
+padding:0px;
+}
+
+#content ul li {
+margin:3px 0px 3px 0px;
+}
+
+#refreshBtn {
+height: 20px;
+text-align: right;
+position: absolute;
+/* right:15px; */
+right:33px;
+}
+
+.divBtn {
+	cursor: pointer;
+	border-radius: 7px;
+	padding-top: 2px;
+ 	padding-bottom: 26px; 
+}
+
+.divBtn:hover {
+	/*background-color:#999999;*/
+	background-color: #FFCC66;
+}
+
+.divBtn:hover font{
+	color: #000;
+}
+
+.hiddenMenu{
+	border-style:solid;
+	border-width:1px;
+	width:150px;
+	position:absolute;
+	display: none;
+	background-color:#fff;
+	padding-bottom: 1px;	
+}
+
+.hiddenMenu td{
+	width:150px;
+	text-align: left;
+	padding-left: 15px;
+	padding-right: 25px;
+	cursor: default;
+}
+
+.hiddenMenu td:hover {
+	background-color: #A6E9FF;
+}
+
+/* #showInAssetBrowser {margin-left : 5px; float:right; margin-top:4px; margin-bottom:10px;} */
+#searchInput { 
+	float:right; 
+	width:90%;
+	border-radius:5px; 
+	margin-top:4px;
+	margin-bottom:10px;
+	border:2px;
+	outline:none;
+	padding-left:18px;                                         
+	background-image:url('./assets/searchbox.png');
+	background-repeat:no-repeat;
+ 	background-position: 1px 3px; 
+ 	font-size:12px;
+}
+.wrap{
+	width  : 50px;
+	word-wrap : normal;
+}
+
+#settingsBtn {
+	height: 20px;
+	/* height: 16px; */ 
+	text-align: right;
+	/* float: right; */
+	vertical-align: top;
+	/* top: 0.5px; */
+	/* right:15px; */
+	right: 5px;
+	position: absolute;
+}
+
+#userDtls {
+	background-color: transparent;
+	bottom: 10px;
+	padding-left: 8%;
+	/* position: absolute; */
+	/* float: left; 
+	left:15px;*/
+	vertical-align: top;
+}
+
+/* #overlay {
+  background-color: black;
+  position: fixed;
+  width: 100%;
+  top: 0; right: 0; bottom: 0; left: 0;
+  opacity: 0.3; also -moz-opacity, etc.
+  z-index: 9999;
+} */
+
+#overlay {
+  	position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    width:100%;
+    background-color:rgba(0, 0, 0, 0.9);
+    z-index:9999;
+    color:white;
+}

@@ -1,0 +1,103 @@
+<!doctype html>
+
+<html>
+<head>
+<meta charset="utf-8">
+<link id="ppstyle" rel="stylesheet" type="text/css" href="./style.css">
+<title>Prototype</title>
+<script src="./ext.js"></script>
+<script src="./lib/CSInterface.js"></script>
+<!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script> -->
+<script src="./js/launcher.js"></script>
+<script src="./js/StatusHelper.js"></script>
+<script src="./js/ZmPlugin.js"></script>
+<script src="./lib/jquery-1.9.1.js"></script>
+<script>
+jQuery(document).ready (function(){
+	//launchCommand('refresh', 'true');
+	//showAlert("doc complete");
+	//onLoaded();
+	jQuery(document).click (function(event) {
+		jQuery( "#lockMenu" ).hide();	
+		jQuery( "#revertMenu" ).hide();	
+		if(jQuery(event.target).closest("div").attr('id') === 'lockDiv') {  
+			jQuery( "#lockMenu" ).css({"top": event.pageY+".px", "left": event.pageX+".px"}).show();
+		}else if(jQuery(event.target).closest("div").attr('id') === 'revertDiv') {  
+			jQuery( "#revertMenu" ).css({"top": event.pageY+".px", "left": event.pageX+".px"}).show();
+		}else if(jQuery(event.target).closest("div").attr('class') === 'divBtn'){
+			launchCommand(jQuery(event.target).closest("div").attr('data-command'), 'false');
+		}
+	});
+	jQuery( ".hiddenMenu tr" ).click(function(event){
+		launchCommand(jQuery(this).attr('id'), 'false');
+	});
+	jQuery(" #refreshBtn ").click(function(){
+		launchCommand('refresh', 'true');
+	});
+});
+
+</script>
+</head>
+
+<body onLoad="onLoaded()">
+	<div>
+		<img id="imod" alt="" src="./assets/orange.png"/>
+		<img id="ilock" alt="" src="./assets/orange.png"/> 
+		<img id="iver" alt="" src="./assets/orange.png"/>
+		<button id="refreshBtn">
+			<img alt="refresh" src="./assets/refresh.png" />
+		</button>
+	</div>
+	<hr width="100%" class="default" color="#000000" size=".5px">
+	<div id="content" class="default">
+		<p>
+			<div class="divBtn" data-command="checkIn"><img alt="Check In" src="./assets/save.png"/><br /><font class="default" style="background-color: transparent;"><b>Check In</b></font></div>
+			<div class="divBtn" data-command="smartCopy"><img alt="Smart Copy" src="./assets/Smart copy1.png" /><br/><font class="default" style="background-color: transparent;"><b>Smart Copy</b></font></div>
+			<div class="divBtn" data-command="update"><img alt="Update" src="./assets/up.png" /><br /><font class="default" style="background-color: transparent;"><b>Update</b></font></div>
+			<div id="lockDiv" class="divBtn"><img alt="Lock/Unlock" src="./assets/lock.png" /><br/><font class="default" style="background-color: transparent;"><b>Lock/Unlock</b></font></div>
+			<div id="revertDiv" class="divBtn"><img alt="Revert" src="./assets/revert.png" /><br /><font class="default" style="background-color: transparent;"><b>Revert</b></font></div>
+			<div class="divBtn" data-command="quickChkIn"><img alt="Quick Check-In" src="./assets/Quick-checkin.png" /><br/><font class="default" style="background-color: transparent;"><b>Quick Check-In</b></font></div>
+		</p>
+		<p>
+			<div class="divBtn" data-command="workflow"><img alt="Workflow" src="./assets/mytasks.png"/><br /><font class="default" style="background-color: transparent;"><b>Workflow</b></font></div>
+			<div class="divBtn" data-command="asset_browser"><img alt="Asset Browser" src="./assets/search.png" /><br/><font class="default" style="background-color: transparent;"><b>Asset Browser</b></font></div>
+			<div class="divBtn" data-command="incomingchanges"><img alt="Incoming Changes" src="./assets/school_board.png"/><br /><font class="default" style="background-color: transparent;"><b>Incoming Changes</b></font></div>
+			<div class="divBtn" data-command="repobrowser"><img alt="Zoom Repository" src="./assets/browsers.png" /><br/><font class="default" style="background-color: transparent;"><b>Zoom Repository</b></font></div>
+			<div class="divBtn" data-command="status"><img alt="Status" src="./assets/status.png"/><br /><font class="default" style="background-color: transparent;"><b>Status</b></font></div>
+			<div class="divBtn" data-command="reveal"><img alt="Reveal in Explorer" src="./assets/open_folder.png" /><br/><font class="default" style="background-color: transparent;"><b>Reveal in Explorer</b></font></div>
+		</p>
+	</div>
+	<div id="lockMenu" class="hiddenMenu">
+		<table id="lockTbl">
+			<tr id="lock">
+				<td><font class="default" style="background-color: transparent; color: #000;">Get Lock</font></td>
+			</tr>
+			<tr id="unlock">
+				<td><font class="default" style="background-color: transparent; color: #000;">Release Lock</font></td>
+			</tr>
+		</table>
+	</div>
+	<div id="revertMenu" class="hiddenMenu">
+		<table id="revertTbl">
+			<tr id="revertdata">
+				<td><font class="default" style="background-color: transparent; color: #000;">Revert Changes</font></td>
+			</tr>
+			<tr id="revertrenamed">
+				<td><font class="default" style="background-color: transparent; color: #000;">Revert Renamed</font></td>
+			</tr>
+			<tr id="revertmove">
+				<td><font class="default" style="background-color: transparent; color: #000;">Revert Moved</font></td>
+			</tr>
+			<tr id="revertadd">
+				<td><font class="default" style="background-color: transparent; color: #000;">Revert Added</font></td>
+			</tr>
+			<tr id="revertall">
+				<td><font class="default" style="background-color: transparent; color: #000;">Revert All</font></td>
+			</tr>
+		</table>
+	</div>
+	<div>
+		
+	</div>
+</body>
+</html>
